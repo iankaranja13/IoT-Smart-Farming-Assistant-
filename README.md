@@ -1,1 +1,2 @@
-# IoT-Smart-Farming-Assistant-
+# IoT-Smart-Farming-Assistant
+AI-powered Decision Support for Climate-Smart Agriculture is a real-time advisory system that leverages IoT sensors, AI models, and weather data to guide farmers in making climate-smart decisions. It monitors soil, crop, and environmental conditions to provide precise recommendations on irrigation, fertilization, and planting. By optimizing farm practices, it reduces resource waste, lowers emissions, and strengthens agricultural resilience against climate change.
