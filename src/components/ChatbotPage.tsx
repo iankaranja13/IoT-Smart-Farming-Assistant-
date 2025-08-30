@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import ReactMarkdown from 'react-markdown';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -158,7 +159,21 @@ useEffect(() => {
                             : 'bg-gray-100 text-gray-800'
                         }`}
                       >
-                        <p className="text-sm whitespace-pre-line">{message.text}</p>
+                        {message.isUser ? (
+                          <p className="text-sm whitespace-pre-line">{message.text}</p>
+                        ) : (
+                          <ReactMarkdown
+                            components={{
+                              p: ({node, ...props}) => <p {...props} className="text-sm whitespace-pre-line" />,
+                              strong: ({node, ...props}) => <strong {...props} className="font-semibold" />,
+                              ul: ({node, ...props}) => <ul {...props} className="list-disc ml-5" />,
+                              ol: ({node, ...props}) => <ol {...props} className="list-decimal ml-5" />,
+                              li: ({node, ...props}) => <li {...props} className="mb-1" />,
+                            }}
+                          >
+                            {message.text}
+                          </ReactMarkdown>
+                        )}
                         <p className="text-xs opacity-70 mt-1">
                           {message.timestamp.toLocaleTimeString()}
                         </p>
