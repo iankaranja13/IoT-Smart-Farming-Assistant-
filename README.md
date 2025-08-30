@@ -1,11 +1,2 @@
-
-  # IoT Smart Farming Assistant Web App
-
-  This is a code bundle for IoT Smart Farming Assistant Web App. The original project is available at https://www.figma.com/design/4PrSYN9G2qDqz0Yo83YLZt/IoT-Smart-Farming-Assistant-Web-App.
-
-  ## Running the code
-
-  Run `npm i` to install the dependencies.
-
-  Run `npm run dev` to start the development server.
-  
+# IoT-Smart-Farming-Assistant
+AI-powered Decision Support for Climate-Smart Agriculture is a real-time advisory system that leverages IoT sensors, AI models, and weather data to guide farmers in making climate-smart decisions. It monitors soil, crop, and environmental conditions to provide precise recommendations on irrigation, fertilization, and planting. By optimizing farm practices, it reduces resource waste, lowers emissions, and strengthens agricultural resilience against climate change.
