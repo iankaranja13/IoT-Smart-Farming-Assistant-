@@ -26,4 +26,5 @@ dist-ssr
 
 # Remove placeholder files
 App.tsx
-App.tsx.backup
+App.tsx.backupnode_modules/
+node_modules/
