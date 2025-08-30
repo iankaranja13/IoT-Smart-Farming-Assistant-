@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Body
+from app.services.ai_client import ask_inflection
 
 router = APIRouter()
 
-@router.get("/")
-async def get_query():
-    return {
-        "message": "Sample query"
-    }
+@router.post("/")
+async def query_chatbot(
+    question: str = Body(..., embed=True),
+    context: dict = Body(default={}, embed=True)
+):
+    response = await ask_inflection(question, context)
+    return {"response": response}
