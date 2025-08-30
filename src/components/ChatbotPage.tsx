@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -50,57 +50,56 @@ export function ChatbotPage({ user }: ChatbotPageProps) {
     { label: "Analytics", icon: TrendingUp, color: "purple" }
   ];
 
-  // Smart response system with different responses based on input
-  const generateResponse = (userInput: string): string => {
-    const input = userInput.toLowerCase();
-    
-    if (input.includes('irrigation') || input.includes('water')) {
-      return `Based on your current soil moisture levels (68%) and upcoming weather (light rain tomorrow), I recommend reducing irrigation by 15% this week. Field C needs attention - moisture is at 45%. Would you like me to create an automated irrigation schedule?`;
-    }
-    
-    if (input.includes('crop') || input.includes('plant')) {
-      return `For your region and soil conditions, I recommend drought-resistant corn varieties for next season. Your soil pH (6.8) is optimal for most crops. Field A shows excellent conditions for leafy greens. Would you like specific variety recommendations?`;
-    }
-    
-    if (input.includes('weather')) {
-      return `Tomorrow's forecast shows 25mm rainfall with strong winds. I recommend:\n• Deploy protective covers for vulnerable crops\n• Check drainage systems\n• Postpone any planned spraying\n• Monitor for potential flooding in low-lying areas`;
-    }
-    
-    if (input.includes('fertilizer') || input.includes('nutrient')) {
-      return `Soil analysis shows nitrogen levels are optimal, but phosphorus is low in Field B (18 ppm, should be 25-30 ppm). I recommend applying 50kg/ha of P2O5 fertilizer. Best timing would be early next week before the expected rain.`;
-    }
-    
-    if (input.includes('yield') || input.includes('productivity')) {
-      return `Your current yield is tracking 12.5% above last season! Key factors: improved irrigation scheduling (+8% efficiency) and optimal soil management. To maximize further, consider precision fertilizer application in underperforming zones.`;
-    }
-    
-    if (input.includes('cost') || input.includes('save') || input.includes('money')) {
-      return `I've identified potential monthly savings of $625:\n• Water efficiency improvements: $245\n• Energy optimization: $180\n• Precision fertilizer application: $150\n• Preventive maintenance: $50\n\nShall I create an implementation plan?`;
-    }
+const fetchBotResponse = async (userInput: string): Promise<string> => {
+  try {
+    const res = await fetch('http://localhost:8000/query', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: userInput }),
+    });
+    const data = await res.json();
+    return data.response;
+  } catch (error) {
+    return "Sorry, I couldn't reach the server.";
+  }
+};
 
-    return `Great question! Based on your farm data (${user.farmId || 'current conditions'}), I can provide detailed insights. Your farm is currently performing well with 87% efficiency. For specific recommendations, could you tell me which aspect you'd like to focus on: irrigation, crop health, weather planning, or cost optimization?`;
-  };
+const [loading, setLoading] = useState(false);
+const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleSendMessage = () => {
-    if (inputText.trim()) {
-      const userMessage: Message = {
-        id: messages.length + 1,
-        text: inputText,
-        isUser: true,
-        timestamp: new Date()
-      };
+const handleSendMessage = async () => {
+  if (inputText.trim()) {
+    const userMessage: Message = {
+      id: messages.length + 1,
+      text: inputText,
+      isUser: true,
+      timestamp: new Date()
+    };
 
-      const botResponse: Message = {
-        id: messages.length + 2,
-        text: generateResponse(inputText),
-        isUser: false,
-        timestamp: new Date()
-      };
+    setMessages(prev => [...prev, userMessage]);
+    setInputText('');
+    setLoading(true);
 
-      setMessages([...messages, userMessage, botResponse]);
-      setInputText('');
-    }
-  };
+    const botReply = await fetchBotResponse(inputText);
+
+    const botResponse: Message = {
+      id: messages.length + 2,
+      text: botReply,
+      isUser: false,
+      timestamp: new Date()
+    };
+
+    setMessages(prev => [...prev, botResponse]);
+    setLoading(false);
+  }
+};
+
+// Scroll to bottom when messages change
+useEffect(() => {
+  if (chatContainerRef.current) {
+    chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+  }
+}, [messages, loading]);
 
   const handleSuggestedQuestion = (question: string) => {
     setInputText(question);
@@ -135,7 +134,12 @@ export function ChatbotPage({ user }: ChatbotPageProps) {
             </CardHeader>
             <CardContent className="flex-1 flex flex-col">
               {/* Messages Area */}
-              <div className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2">
+
+              <div
+                ref={chatContainerRef}
+                className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2"
+                style={{ maxHeight: 540, minHeight: 200 }}
+              >
                 {messages.map((message) => (
                   <div
                     key={message.id}
@@ -167,6 +171,24 @@ export function ChatbotPage({ user }: ChatbotPageProps) {
                     </div>
                   </div>
                 ))}
+                {loading && (
+                  <div className="flex justify-start">
+                    <div className="flex items-center space-x-2 max-w-md lg:max-w-lg">
+                      <div className="p-2 bg-green-100 rounded-full mt-1">
+                        <Bot className="h-4 w-4 text-green-600 animate-bounce" />
+                      </div>
+                      <div className="px-4 py-3 rounded-lg bg-gray-100 text-gray-800">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-sm">Thinking...</span>
+                          <svg className="animate-spin h-4 w-4 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Input Area */}
