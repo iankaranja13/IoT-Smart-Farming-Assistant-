@@ -45,7 +45,7 @@ export function InsightsPage({ user }: InsightsPageProps) {
       title: 'Optimize Irrigation Schedule',
       description: 'Reduce water usage by 18% while maintaining crop health',
       impact: 'High',
-      savings: '$245/month',
+      savings: 'KSh 32,000/month',
       actions: ['Adjust irrigation timer', 'Install moisture sensors', 'Update watering zones'],
       timeline: '2-3 days'
     },
@@ -71,7 +71,7 @@ export function InsightsPage({ user }: InsightsPageProps) {
       title: 'Storm Preparation',
       description: 'Heavy rainfall predicted - protect vulnerable crops',
       impact: 'Critical',
-      savings: 'Prevent $1,200 crop loss',
+      savings: 'Prevent KSh 160,000 crop loss',
       actions: ['Deploy protective covers', 'Improve drainage', 'Secure equipment'],
       timeline: '24 hours'
     },
@@ -84,7 +84,7 @@ export function InsightsPage({ user }: InsightsPageProps) {
       title: 'Solar Integration',
       description: 'Install solar panels for irrigation pumps',
       impact: 'Long-term',
-      savings: '$180/month',
+      savings: 'KSh 24,000/month',
       actions: ['Get solar quote', 'Plan installation', 'Grid tie setup'],
       timeline: '2-3 months'
     }
@@ -127,7 +127,7 @@ export function InsightsPage({ user }: InsightsPageProps) {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-muted-foreground">Potential Savings</p>
-                <p className="text-xl">$625</p>
+                <p className="text-xl">KSh 83,000</p>
               </div>
               <TrendingUp className="h-8 w-8 text-green-500" />
             </div>
