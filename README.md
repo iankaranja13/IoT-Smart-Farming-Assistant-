@@ -133,7 +133,7 @@ The application will be available at `http://localhost:3000`
 ### Welcome Page
 - Simple onboarding flow for farmers
 - Name, email, and farm ID collection
-- Responsive design with feature highlights
+- Responsive design with feature highlights and more
 
 ### Dashboard
 - Real-time metrics display (soil moisture, temperature, rainfall)
